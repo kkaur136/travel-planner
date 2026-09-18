@@ -1,3 +1,5 @@
+import "./destinations.css";
+
 function Destinations() {
     const destinations = [
         {
