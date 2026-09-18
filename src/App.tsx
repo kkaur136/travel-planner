@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import SavedDestination from './Components/saved-destinations/SavedDestinations'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import SavedDestinations from './Components/saved-destinations/SavedDestinations'
  
 function App() {
   const [count, setCount] = useState(0)
@@ -113,6 +115,7 @@ function App() {
         </div>
       </section>
 
+      <SavedDestinations />
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
