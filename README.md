@@ -18,6 +18,12 @@ Digital divas
 
 ## User stories
 
-- As a user, I want to browse destinations so that I can decise where I want to travel.
-- As a user, I want to create a trip plan to organize everything.
-- As a user, I want to save activities so that I can plan what I want to do during my trip.
+- As a user, I want to browse destinations so that I can decide where I want to travel.
+- As a user, I want to save destinations so that I can keep track of places I want to visit in future.
+- As a user, I want to view travel activities so that I can plan what to do during my trip.
+
+## Sprint 1 Contributions
+
+Khushpreet Kaur - Activities: Created the Activities component and displayed a list of travel activities by looping through an activities array.
+Gurmandeep Kaur - Destinations: Created the Destinations component and displayed a list of travel destinations by looping through a destinations array.
+Robinpreet Kaur - Saved Destinations: Created the Saved Destinations component and displayed a list of saved destinations by looping through a saved destinations array.
