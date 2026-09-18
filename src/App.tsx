@@ -5,6 +5,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 import SavedDestinations from './Components/saved-destinations/SavedDestinations'
+import Destinations from "./components/destinations/destinations";
  
 function App() {
   const [count, setCount] = useState(0)
@@ -117,6 +118,7 @@ function App() {
 
       <SavedDestinations />
       <div className="ticks"></div>
+      <Destinations />
       <section id="spacer"></section>
     </>
   )

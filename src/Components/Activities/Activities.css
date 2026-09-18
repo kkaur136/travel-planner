@@ -1,0 +1,16 @@
+.activities {
+    padding: 20px;
+}
+
+.activities h2 {
+    font-size: 24px;
+}
+
+.activities ul {
+    list-style: none;
+    padding: 0;
+}
+
+.activities li {
+    margin-bottom: 16px;
+}
