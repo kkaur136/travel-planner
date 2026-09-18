@@ -1,4 +1,4 @@
-import "./activities.css";
+import "./Activities.css";
 
 function Activities() {
     const activities = [
@@ -37,8 +37,8 @@ function Activities() {
                 {activities.map((activity) => (
                     <li key={activity.id}>
                         <h3>{activity.name}</h3>
-                        <p>City: {activity.city}</p>
-                        <p>Duration: {activity.duration}</p>
+                        <p>{activity.city}</p>
+                        <p>{activity.duration}</p>
                     </li>
                 ))}
             </ul>
