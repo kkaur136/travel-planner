@@ -1,32 +1,29 @@
-# React + TypeScript + Vite
+# Travel Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Project Description
 
-Currently, two official plugins are available:
+Travel Planner is an application that helps users organize trips, discover destinations, create itineraries, and manage activities.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project Team
 
-## React Compiler
+### Team Name
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Digital divas
 
-## Expanding the Oxlint configuration
+### Members
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- Khushpreet Kaur
+- Gurmandeep Kaur
+- Robinpreet Kaur
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+## User stories
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- As a user, I want to browse destinations so that I can decide where I want to travel.
+- As a user, I want to save destinations so that I can keep track of places I want to visit in future.
+- As a user, I want to view travel activities so that I can plan what to do during my trip.
+
+## Sprint 1 Contributions
+
+Khushpreet Kaur - Activities: Created the Activities component and displayed a list of travel activities by looping through an activities array.
+Gurmandeep Kaur - Destinations: Created the Destinations component and displayed a list of travel destinations by looping through a destinations array.
+Robinpreet Kaur - Saved Destinations: Created the Saved Destinations component and displayed a list of saved destinations by looping through a saved destinations array.
