@@ -17,6 +17,11 @@ function Destinations() {
             city: "London",
             country: "UK",
         },
+        {
+            id: 4,
+            city: "Paris",
+            country: "France",
+        }
     ];
 
     return (
