@@ -1,48 +1,49 @@
+import "./activities.css";
+
 function Activities() {
-  const activities = [
-    {
-      id: 1,
-      name: "Hiking",
-      location: "Banff National Park",
-      duration: "3 hours",
-    },
-    {
-      id: 2,
-      name: "Kayaking",
-      location: "Lake Louise",
-      duration: "2 hours",
-    },
-    {
-      id: 3,
-      name: "Gondola Ride",
-      location: "Banff",
-      duration: "1 hour",
-    },
-    {
-      id: 4,
-      name: "Sightseeing",
-      location: "Downtown Banff",
-      duration: "2 hours",
-    },
-  ];
+    const activities = [
+        {
+            id: 1,
+            name: "Eiffel Tower Visit",
+            city: "Paris",
+            duration: "2 hours",
+        },
+        {
+            id: 2,
+            name: "Beach Walk",
+            city: "Nice",
+            duration: "1 hour",
+        },
+        {
+            id: 3,
+            name: "Old Town Tour",
+            city: "Lyon",
+            duration: "3 hours",
+        },
+        {
+            id: 4,
+            name: "Wine Museum Visit",
+            city: "Bordeaux",
+            duration: "2 hours",
+        }
+    ];
 
-  return (
-    <section className="activities">
-      <h2>Travel Activities</h2>
+    return (
+        <section className="activities">
+            <h2>Travel Activities</h2>
+            <p>Explore fun activities available at each destination.</p>
 
-      <p>Explore activities you can enjoy during your trip.</p>
-
-      <ul>
-        {activities.map((activity) => (
-          <li key={activity.id}>
-            <h3>{activity.name}</h3>
-            <p>Location: {activity.location}</p>
-            <p>Duration: {activity.duration}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
+            <ul>
+                {activities.map((activity) => (
+                    <li key={activity.id}>
+                        <h3>{activity.name}</h3>
+                        <p>City: {activity.city}</p>
+                        <p>Duration: {activity.duration}</p>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    );
 }
 
 export default Activities;
