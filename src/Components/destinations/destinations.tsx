@@ -45,7 +45,15 @@ function Destinations() {
 
     setCity("");
     setCountry("");
-}
+    }
+
+    function removeDestination(id: number) {
+    const updatedDestinations = destinations.filter(
+        (destination) => destination.id !== id
+    );
+
+    setDestinations(updatedDestinations);
+    }
 
     return (
     <section className="destinations">
@@ -79,8 +87,15 @@ function Destinations() {
         <ul>
             {destinations.map((destination) => (
                 <li key={destination.id}>
-                    <h3>{destination.city}</h3>
-                    <p>{destination.country}</p>
+                <h3>{destination.city}</h3>
+                <p>{destination.country}</p>
+
+                <button
+                    type="button"
+                    onClick={() => removeDestination(destination.id)}
+                >
+                    Remove
+                </button>
                 </li>
             ))}
         </ul>
