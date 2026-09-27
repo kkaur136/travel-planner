@@ -1,7 +1,8 @@
+import { useState } from "react";
 import "./destinations.css";
 
 function Destinations() {
-    const destinations = [
+    const [destinations, setDestinations] = useState([
         {
             id: 1,
             city: "Paris",
@@ -22,7 +23,7 @@ function Destinations() {
             city: "Bordeaux",
             country: "France",
         }
-    ];
+    ]);
 
     return (
         <section className="destinations">
