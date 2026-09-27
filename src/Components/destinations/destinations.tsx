@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./destinations.css";
+import DestinationForm from "./DestinationForm";
 
 function Destinations() {
     const [destinations, setDestinations] = useState([
@@ -60,29 +61,13 @@ function Destinations() {
         <h2>Destinations for My France Trip</h2>
         <p>Destinations planned for my France trip.</p>
 
-        <form onSubmit={addDestination}>
-            <div>
-                <label htmlFor="city">City:</label>
-                <input
-                    type="text"
-                    id="city"
-                    value={city}
-                    onChange={(event) => setCity(event.target.value)}
-                />
-            </div>
-
-            <div>
-                <label htmlFor="country">Country:</label>
-                <input
-                    type="text"
-                    id="country"
-                    value={country}
-                    onChange={(event) => setCountry(event.target.value)}
-                />
-            </div>
-
-            <button type="submit">Add Destination</button>
-        </form>
+        <DestinationForm
+    city={city}
+    country={country}
+    setCity={setCity}
+    setCountry={setCountry}
+    addDestination={addDestination}
+/>
 
         <ul>
             {destinations.map((destination) => (
