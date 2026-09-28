@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 const destinations = [
   {
     id: 1,
@@ -22,11 +24,31 @@ const destinations = [
   },
 ];
 
-function SavedDestinations() {
+type SavedDestinationsProps = {
+  sharedCount: number;
+  setSharedCount: Dispatch<SetStateAction<number>>;
+};
+
+function SavedDestinations({
+  sharedCount,
+  setSharedCount,
+}: SavedDestinationsProps) {
   return (
     <section className="saved-destinations">
       <h2>Saved Destinations</h2>
       <p>View the destinations you have saved for future trips.</p>
+
+      <div>
+        <p>Shared Count: {sharedCount}</p>
+
+        <button onClick={() => setSharedCount(sharedCount + 1)}>
+          Increase Shared Count
+        </button>
+
+        <button onClick={() => setSharedCount(sharedCount - 1)}>
+          Decrease Shared Count
+        </button>
+      </div>
 
       <ul className="saved-destinations__list">
         {destinations.map((destination) => (

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Layout from "./Components/layout/Layout";
@@ -6,6 +7,8 @@ import Activities from "./Components/Activities/Activities";
 import SavedDestinations from "./Components/saved-destinations/SavedDestinations";
 
 function App() {
+  const [sharedCount, setSharedCount] = useState(0);
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -13,17 +16,32 @@ function App() {
 
         <Route
           path="destinations"
-          element={<Destinations />}
+          element={
+            <Destinations
+              sharedCount={sharedCount}
+              setSharedCount={setSharedCount}
+            />
+          }
         />
 
         <Route
           path="activities"
-          element={<Activities />}
+          element={
+            <Activities
+              sharedCount={sharedCount}
+              setSharedCount={setSharedCount}
+            />
+          }
         />
 
         <Route
           path="saved-destinations"
-          element={<SavedDestinations />}
+          element={
+            <SavedDestinations
+              sharedCount={sharedCount}
+              setSharedCount={setSharedCount}
+            />
+          }
         />
       </Route>
     </Routes>
