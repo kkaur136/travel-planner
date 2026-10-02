@@ -5,8 +5,8 @@ import ActivityForm from "./ActivityForm";
 import ActivityItem from "./ActivityItem";
 
 type FeaturePageProps = {
-  tripName: string;
-  setTripName: Dispatch<SetStateAction<string>>;
+  sharedCount: number;
+  setSharedCount: Dispatch<SetStateAction<number>>;
 };
 
 type Activity = {
@@ -17,8 +17,8 @@ type Activity = {
 };
 
 function Activities({
-  tripName,
-  setTripName,
+  sharedCount,
+  setSharedCount,
 }: FeaturePageProps) {
   const destinations = [
     { id: 1, city: "Paris", country: "France" },
@@ -64,18 +64,26 @@ function Activities({
 
   return (
     <section className="activities">
-      <h2>Activities for {tripName}</h2>
+      <h2>Travel Activities</h2>
+      <p>Explore activities planned for each destination.</p>
 
-      <label htmlFor="activity-trip-name">
-        Trip Name:
-      </label>
+      <div>
+        <p>Shared Count: {sharedCount}</p>
 
-      <input
-        id="activity-trip-name"
-        type="text"
-        value={tripName}
-        onChange={(event) => setTripName(event.target.value)}
-      />
+        <button
+          type="button"
+          onClick={() => setSharedCount(sharedCount + 1)}
+        >
+          Increase Shared Count
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSharedCount(sharedCount - 1)}
+        >
+          Decrease Shared Count
+        </button>
+      </div>
 
       <ActivityForm
         destinations={destinations}
