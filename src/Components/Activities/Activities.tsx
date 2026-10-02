@@ -1,16 +1,32 @@
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import "./Activities.css";
+import ActivityForm from "./ActivityForm";
 
-type ActivitiesProps = {
-  sharedCount: number;
-  setSharedCount: Dispatch<SetStateAction<number>>;
+type FeaturePageProps = {
+  tripName: string;
+  setTripName: Dispatch<SetStateAction<string>>;
+};
+
+type Activity = {
+  id: number;
+  name: string;
+  city: string;
+  duration: string;
 };
 
 function Activities({
-  sharedCount,
-  setSharedCount,
-}: ActivitiesProps) {
-  const activities = [
+  tripName,
+  setTripName,
+}: FeaturePageProps) {
+  const destinations = [
+    { id: 1, city: "Paris", country: "France" },
+    { id: 2, city: "Nice", country: "France" },
+    { id: 3, city: "Lyon", country: "France" },
+    { id: 4, city: "Bordeaux", country: "France" },
+  ];
+
+  const [activities, setActivities] = useState<Activity[]>([
     {
       id: 1,
       name: "Eiffel Tower Visit",
@@ -35,34 +51,50 @@ function Activities({
       city: "Bordeaux",
       duration: "2 hours",
     },
-  ];
+  ]);
 
   return (
     <section className="activities">
-      <h2>Travel Activities</h2>
-      <p>Explore fun activities available at each destination.</p>
+      <h2>Activities for {tripName}</h2>
 
-      <div>
-        <p>Shared Count: {sharedCount}</p>
+      <label htmlFor="activity-trip-name">
+        Trip Name:
+      </label>
 
-        <button onClick={() => setSharedCount(sharedCount + 1)}>
-          Increase Shared Count
-        </button>
+      <input
+        id="activity-trip-name"
+        type="text"
+        value={tripName}
+        onChange={(event) => setTripName(event.target.value)}
+      />
 
-        <button onClick={() => setSharedCount(sharedCount - 1)}>
-          Decrease Shared Count
-        </button>
-      </div>
+      <ActivityForm
+        destinations={destinations}
+        activities={activities}
+        setActivities={setActivities}
+      />
 
-      <ul>
-        {activities.map((activity) => (
-          <li key={activity.id}>
-            <h3>{activity.name}</h3>
-            <p>{activity.city}</p>
-            <p>{activity.duration}</p>
-          </li>
-        ))}
-      </ul>
+      <h2>Activities by Destination</h2>
+
+      {destinations.map((destination) => (
+        <section key={destination.id}>
+          <h3>{destination.city}</h3>
+
+          <ul>
+            {activities
+              .filter(
+                (activity) =>
+                  activity.city === destination.city
+              )
+              .map((activity) => (
+                <li key={activity.id}>
+                  <h4>{activity.name}</h4>
+                  <p>{activity.duration}</p>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))}
     </section>
   );
 }
