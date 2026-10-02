@@ -3,8 +3,14 @@ import { useState } from "react";
 import "./destinations.css";
 import DestinationForm from "./DestinationForm";
 
-
-function Destinations() {
+type DestinationsProps = {
+    sharedCount: number;
+    setSharedCount: React.Dispatch<React.SetStateAction<number>>;
+};
+function Destinations({
+    sharedCount,
+    setSharedCount,
+}: DestinationsProps) {
     const [destinations, setDestinations] = useState([
         {
             id: 1,
@@ -62,6 +68,16 @@ function Destinations() {
     <section className="destinations">
         <h2>Destinations for My France Trip</h2>
         <p>Destinations planned for my France trip.</p>
+        <div>
+    <p>Shared Count: {sharedCount}</p>
+
+    <button
+        type="button"
+        onClick={() => setSharedCount(sharedCount + 1)}
+    >
+        Increase Shared Count
+    </button>
+</div>
 
         <DestinationForm
     city={city}
