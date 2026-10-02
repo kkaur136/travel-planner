@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import "./Activities.css";
 import ActivityForm from "./ActivityForm";
+import ActivityItem from "./ActivityItem";
 
 type FeaturePageProps = {
   tripName: string;
@@ -53,6 +54,14 @@ function Activities({
     },
   ]);
 
+  function removeActivity(id: number) {
+    setActivities((currentActivities) =>
+      currentActivities.filter(
+        (activity) => activity.id !== id
+      )
+    );
+  }
+
   return (
     <section className="activities">
       <h2>Activities for {tripName}</h2>
@@ -76,25 +85,34 @@ function Activities({
 
       <h2>Activities by Destination</h2>
 
-      {destinations.map((destination) => (
-        <section key={destination.id}>
-          <h3>{destination.city}</h3>
+      {destinations.map((destination) => {
+        const destinationActivities = activities.filter(
+          (activity) =>
+            activity.city === destination.city
+        );
 
-          <ul>
-            {activities
-              .filter(
-                (activity) =>
-                  activity.city === destination.city
-              )
-              .map((activity) => (
-                <li key={activity.id}>
-                  <h4>{activity.name}</h4>
-                  <p>{activity.duration}</p>
-                </li>
-              ))}
-          </ul>
-        </section>
-      ))}
+        return (
+          <section key={destination.id}>
+            <h3>{destination.city}</h3>
+
+            {destinationActivities.length === 0 ? (
+              <p>No activities added.</p>
+            ) : (
+              <ul>
+                {destinationActivities.map((activity) => (
+                  <ActivityItem
+                    key={activity.id}
+                    id={activity.id}
+                    name={activity.name}
+                    duration={activity.duration}
+                    removeActivity={removeActivity}
+                  />
+                ))}
+              </ul>
+            )}
+          </section>
+        );
+      })}
     </section>
   );
 }
