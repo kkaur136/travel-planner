@@ -4,6 +4,7 @@ type DestinationFormProps = {
     setCity: (city: string) => void;
     setCountry: (country: string) => void;
     addDestination: (event: React.FormEvent) => void;
+    error: string;
 };
 
 function DestinationForm({
@@ -11,7 +12,8 @@ function DestinationForm({
     country,
     setCity,
     setCountry,
-    addDestination
+    addDestination,
+    error
 }: DestinationFormProps) {
     return (
         <form onSubmit={addDestination}>
@@ -34,6 +36,7 @@ function DestinationForm({
                     onChange={(event) => setCountry(event.target.value)}
                 />
             </div>
+            {error && <p role="alert" className="validation-error">{error}</p>}
 
             <button type="submit">Add Destination</button>
         </form>

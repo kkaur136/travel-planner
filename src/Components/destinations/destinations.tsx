@@ -36,13 +36,27 @@ function Destinations({
 
     const [city, setCity] = useState("");
     const [country, setCountry] = useState("");
+    const [error, setError] = useState("");
 
     function addDestination(event: React.FormEvent) {
     event.preventDefault();
 
-    if (city.trim() === "" || country.trim() === "") {
+    if (city.trim() === "" && country.trim() === "") {
+        setError("Please enter a city and country.");
         return;
     }
+
+    if (city.trim() === "") {
+        setError("Please enter a city name.");
+        return;
+    }
+
+    if (country.trim() === "") {
+        setError("Please enter a country name.");
+        return;
+    }
+
+    setError("");
 
     const newDestination = {
         id: Date.now(),
@@ -85,6 +99,7 @@ function Destinations({
     setCity={setCity}
     setCountry={setCountry}
     addDestination={addDestination}
+    error={error}
 />
 
         <ul>
