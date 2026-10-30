@@ -1,4 +1,4 @@
-
+import "./SavedDestinations.css";
 import type { FormEvent } from "react";
 
 import SavedDestinationForm from "./savedDestinationForm";
