@@ -1,107 +1,73 @@
 
-import { useState } from "react";
-import type {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-} from "react";
+import type { FormEvent } from "react";
 
 import SavedDestinationForm from "./savedDestinationForm";
-
 import type { SavedDestination } from "../../types/SavedDestination";
 
-import {
-  getSavedDestinations,
-  createSavedDestination,
-  deleteSavedDestination,
-} from "../../repositories/savedDestinationRepository";
+import { useSavedDestinations } from "../../hooks/useSavedDestinations";
+import { useSavedDestinationList } from "../../hooks/useSavedDestinationList";
+
+import { savedDestinationService } from "../../services/savedDestinationService";
+import { SavedDestinationContext } from "../../context/SavedDestinationContext";
+import { useSharedCount } from "../../context/SharedCountContext";
 
 const destinations = [
   {
     id: 1,
     name: "Banff National Park",
     location: "Alberta, Canada",
-    description:
-      "A beautiful destination known for mountains, lakes, and outdoor activities.",
   },
   {
     id: 2,
     name: "Paris",
     location: "France",
-    description:
-      "A popular destination known for the Eiffel Tower, museums, and historic streets.",
   },
   {
     id: 3,
     name: "Tokyo",
     location: "Japan",
-    description:
-      "A vibrant city known for technology, culture, food, and famous attractions.",
   },
 ];
-
-type SavedDestinationsProps = {
-  sharedCount: number;
-  setSharedCount: Dispatch<SetStateAction<number>>;
-};
 
 /**
  * Saved Destinations component.
  *
- * Displays saved destinations and the form for adding favourites.
- * Uses repository methods for reading, creating, and deleting
- * saved destination records.
- *
- * In the next refactoring stage, presentation state will move
- * into a custom hook and validation into a service.
+ * Presentation: Displays the form and saved destinations.
+ * Hook: Manages form state and error messages.
+ * List Hook: Retrieves saved destinations through the service.
+ * Context: Shares form state with the form component.
+ * Service: Handles validation and business rules.
+ * Repository: Handles CRUD operations and data storage.
+ * SharedCountContext: Shares counter state across feature pages.
  */
-function SavedDestinations({
-  sharedCount,
-  setSharedCount,
-}: SavedDestinationsProps) {
-  const [selectedDestination, setSelectedDestination] = useState("");
-  const [lastVisited, setLastVisited] = useState("");
-  const [rating, setRating] = useState("");
-  const [note, setNote] = useState("");
+function SavedDestinations() {
+  const { sharedCount, setSharedCount } = useSharedCount();
 
-  const [savedDestinations, setSavedDestinations] = useState<
-    SavedDestination[]
-  >(() => getSavedDestinations());
+  const formState = useSavedDestinations();
 
-  const [error, setError] = useState("");
+  const {
+    selectedDestination,
+    lastVisited,
+    rating,
+    note,
+    setError,
+    resetForm,
+  } = formState;
 
-  const refreshSavedDestinations = () => {
-    setSavedDestinations(getSavedDestinations());
-  };
+  const {
+    savedDestinations,
+    refreshSavedDestinations,
+  } = useSavedDestinationList();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!selectedDestination) {
-      setError("Please select a destination.");
-      return;
-    }
-
-    if (!rating) {
-      setError("Please select a rating.");
-      return;
-    }
-
-    const alreadySaved = getSavedDestinations().some(
-      (destination) => destination.name === selectedDestination
-    );
-
-    if (alreadySaved) {
-      setError("This destination is already in your favourites.");
-      return;
-    }
 
     const destinationDetails = destinations.find(
       (destination) => destination.name === selectedDestination
     );
 
     if (!destinationDetails) {
-      setError("Destination could not be found.");
+      setError("Please select a destination.");
       return;
     }
 
@@ -114,18 +80,21 @@ function SavedDestinations({
       note,
     };
 
-    createSavedDestination(newSavedDestination);
-    refreshSavedDestinations();
-
-    setSelectedDestination("");
-    setLastVisited("");
-    setRating("");
-    setNote("");
-    setError("");
+    try {
+      savedDestinationService.add(newSavedDestination);
+      refreshSavedDestinations();
+      resetForm();
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unable to save destination."
+      );
+    }
   };
 
   const handleRemove = (id: number) => {
-    deleteSavedDestination(id);
+    savedDestinationService.remove(id);
     refreshSavedDestinations();
   };
 
@@ -142,14 +111,18 @@ function SavedDestinations({
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount + 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous + 1)
+          }
         >
           Increase Shared Count
         </button>
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount - 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous - 1)
+          }
         >
           Decrease Shared Count
         </button>
@@ -157,19 +130,12 @@ function SavedDestinations({
 
       <h3>Add to Favourites</h3>
 
-      <SavedDestinationForm
-        destinations={destinations}
-        selectedDestination={selectedDestination}
-        setSelectedDestination={setSelectedDestination}
-        lastVisited={lastVisited}
-        setLastVisited={setLastVisited}
-        rating={rating}
-        setRating={setRating}
-        note={note}
-        setNote={setNote}
-        error={error}
-        handleSubmit={handleSubmit}
-      />
+      <SavedDestinationContext.Provider value={formState}>
+        <SavedDestinationForm
+          destinations={destinations}
+          handleSubmit={handleSubmit}
+        />
+      </SavedDestinationContext.Provider>
 
       <h3>My Favourites</h3>
 

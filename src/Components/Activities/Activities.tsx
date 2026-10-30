@@ -1,41 +1,38 @@
 
-import type { Dispatch, SetStateAction } from "react";
 import "./Activities.css";
 
 import ActivityForm from "./ActivityForm";
 import ActivityItem from "./ActivityItem";
 
 import useActivities from "../../hooks/useActivities";
+import { useSharedCount } from "../../context/SharedCountContext";
 import { destinationsData } from "../../data/destinationsData";
 
-type ActivitiesProps = {
-  sharedCount: number;
-  setSharedCount: Dispatch<SetStateAction<number>>;
-};
-
 /*
- Sprint 3 Architecture:
- The Activities component uses the useActivities hook
- to manage activity state and user actions.
+ Sprint 3 Architecture - Activities Feature
 
- The hook calls the Activity Service for business logic.
- The service communicates with the Activity Repository
- to access and update activity data.
-
+ This component is responsible for displaying the Activities page.
+ The useActivities hook manages activity state and actions.
+ The Activity Service handles validation and business rules.
+ The Activity Repository manages activity data.
  Destination test data is imported from a separate file
  instead of being hardcoded in this component.
+ SharedCountContext allows the counter to be shared
+ between different pages without passing props.
 */
 
-function Activities({
-  sharedCount,
-  setSharedCount,
-}: ActivitiesProps) {
+function Activities() {
+  // Get activity data and actions from the custom hook.
   const {
     activities,
     handleAddActivity,
     handleRemoveActivity,
   } = useActivities();
 
+  // Get the shared count from Context.
+  const { sharedCount, setSharedCount } = useSharedCount();
+
+  // Get destinations from the separate data file.
   const destinations = destinationsData;
 
   return (
@@ -46,26 +43,30 @@ function Activities({
         Add activities for your trip and view them by destination.
       </p>
 
-      {/* Shared state from App.tsx */}
+      {/* Shared count across pages */}
       <div className="activities-shared">
         <p>Shared Count: {sharedCount}</p>
 
         <button
           type="button"
-          onClick={() => setSharedCount((count) => count + 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous + 1)
+          }
         >
           Increase Shared Count
         </button>
 
         <button
           type="button"
-          onClick={() => setSharedCount((count) => count - 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous - 1)
+          }
         >
           Decrease Shared Count
         </button>
       </div>
 
-      {/* Form for adding activities */}
+      {/* Form for adding a new activity */}
       <ActivityForm
         destinations={destinations}
         onAddActivity={handleAddActivity}
@@ -75,6 +76,7 @@ function Activities({
 
       <div className="activities-destinations">
         {destinations.map((destination) => {
+          // Find activities belonging to this destination.
           const destinationActivities = activities.filter(
             (activity) => activity.city === destination.city
           );

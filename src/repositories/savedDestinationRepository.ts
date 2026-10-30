@@ -1,8 +1,9 @@
+import { savedDestinationsData } from "../data/savedDestinationsData";
 import type { SavedDestination } from "../types/SavedDestination";
 
 // Temporary in-memory storage.
-// We will connect this to test data in Issue #53.
-let savedDestinations: SavedDestination[] = [];
+
+let savedDestinations: SavedDestination[] = [...savedDestinationsData];
 
 export const getSavedDestinations = (): SavedDestination[] => {
   return [...savedDestinations];
