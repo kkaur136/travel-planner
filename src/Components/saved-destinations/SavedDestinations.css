@@ -1,0 +1,105 @@
+
+/* Saved Destinations Page  Layout*/
+.saved-destinations {
+  padding: 2rem;
+}
+
+.saved-destinations h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.saved-destinations h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Saved Destination Cards */
+.saved-destinations__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.saved-destinations__item {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  min-width: 200px;
+  flex: 1 1 220px;
+  max-width: 320px;
+}
+
+.saved-destinations__item h3 {
+  margin-top: 0;
+}
+
+.saved-destinations__item p {
+  margin-bottom: 0.5rem;
+}
+
+/* Form Styling */
+.saved-destinations form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 450px;
+  margin-bottom: 2rem;
+}
+
+.saved-destinations label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.saved-destinations input,
+.saved-destinations select,
+.saved-destinations textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font: inherit;
+  background-color: transparent;
+  color: inherit;
+}
+
+.saved-destinations textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Buttons */
+.saved-destinations button {
+  padding: 0.65rem 1rem;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+  margin: 0.25rem;
+}
+
+.saved-destinations button:hover {
+  border-color: #646cff;
+}
+
+.saved-destinations button:focus-visible {
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
+}
+
+/* Responsive Layout */
+@media (max-width: 600px) {
+  .saved-destinations {
+    padding: 1rem;
+  }
+
+  .saved-destinations__item {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
