@@ -1,4 +1,4 @@
-
+import { useDestinationValidation } from "../../hooks/useDestinationValidation";
 import "./destinations.css";
 import DestinationForm from "./DestinationForm";
 import { useDestinations } from "../../hooks/useDestinations";
@@ -22,8 +22,15 @@ function Destinations({
         handleRemoveDestination
     } = useDestinations();
 
+    const { checkDestination } = useDestinationValidation();
+
     function addDestination(event: React.FormEvent) {
     event.preventDefault();
+
+    if (!checkDestination(city, country)) {
+        return;
+    }
+
     handleAddDestination();
 }
 

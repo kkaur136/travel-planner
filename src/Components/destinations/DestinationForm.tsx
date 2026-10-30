@@ -1,3 +1,5 @@
+import { useDestinationValidation } from "../../hooks/useDestinationValidation";
+
 type DestinationFormProps = {
     city: string;
     country: string;
@@ -15,8 +17,16 @@ function DestinationForm({
     addDestination,
     error
 }: DestinationFormProps) {
+        const { checkDestination, validationError } = useDestinationValidation();
+
+    function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+
+    checkDestination(city, country);
+    addDestination(event);
+}
     return (
-        <form onSubmit={addDestination}>
+        <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="city">City:</label>
                 <input
@@ -36,8 +46,11 @@ function DestinationForm({
                     onChange={(event) => setCountry(event.target.value)}
                 />
             </div>
-            {error && <p role="alert" className="validation-error">{error}</p>}
-
+            {(error || validationError) && (
+    <p role="alert" className="validation-error">
+        {error || validationError}
+    </p>
+)}
             <button type="submit">Add Destination</button>
         </form>
     );
