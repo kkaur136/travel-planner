@@ -1,11 +1,12 @@
 
-import { useState } from "react";
 import type { FormEvent } from "react";
 
 import SavedDestinationForm from "./savedDestinationForm";
 import type { SavedDestination } from "../../types/SavedDestination";
 
 import { useSavedDestinations } from "../../hooks/useSavedDestinations";
+import { useSavedDestinationList } from "../../hooks/useSavedDestinationList";
+
 import { savedDestinationService } from "../../services/savedDestinationService";
 import { SavedDestinationContext } from "../../context/SavedDestinationContext";
 import { useSharedCount } from "../../context/SharedCountContext";
@@ -33,6 +34,7 @@ const destinations = [
  *
  * Presentation: Displays the form and saved destinations.
  * Hook: Manages form state and error messages.
+ * List Hook: Retrieves saved destinations through the service.
  * Context: Shares form state with the form component.
  * Service: Handles validation and business rules.
  * Repository: Handles CRUD operations and data storage.
@@ -52,13 +54,10 @@ function SavedDestinations() {
     resetForm,
   } = formState;
 
-  const [savedDestinations, setSavedDestinations] = useState<
-    SavedDestination[]
-  >(() => savedDestinationService.getAll());
-
-  const refreshSavedDestinations = () => {
-    setSavedDestinations(savedDestinationService.getAll());
-  };
+  const {
+    savedDestinations,
+    refreshSavedDestinations,
+  } = useSavedDestinationList();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
