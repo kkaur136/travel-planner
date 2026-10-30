@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import type { Dispatch, FormEvent, SetStateAction } from "react";
+import type { FormEvent } from "react";
 
 import SavedDestinationForm from "./savedDestinationForm";
 import type { SavedDestination } from "../../types/SavedDestination";
@@ -8,6 +8,7 @@ import type { SavedDestination } from "../../types/SavedDestination";
 import { useSavedDestinations } from "../../hooks/useSavedDestinations";
 import { savedDestinationService } from "../../services/savedDestinationService";
 import { SavedDestinationContext } from "../../context/SavedDestinationContext";
+import { useSharedCount } from "../../context/SharedCountContext";
 
 const destinations = [
   {
@@ -27,11 +28,6 @@ const destinations = [
   },
 ];
 
-type SavedDestinationsProps = {
-  sharedCount: number;
-  setSharedCount: Dispatch<SetStateAction<number>>;
-};
-
 /**
  * Saved Destinations component.
  *
@@ -40,11 +36,11 @@ type SavedDestinationsProps = {
  * Context: Shares form state with the form component.
  * Service: Handles validation and business rules.
  * Repository: Handles CRUD operations and data storage.
+ * SharedCountContext: Shares counter state across feature pages.
  */
-function SavedDestinations({
-  sharedCount,
-  setSharedCount,
-}: SavedDestinationsProps) {
+function SavedDestinations() {
+  const { sharedCount, setSharedCount } = useSharedCount();
+
   const formState = useSavedDestinations();
 
   const {
@@ -116,14 +112,18 @@ function SavedDestinations({
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount + 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous + 1)
+          }
         >
           Increase Shared Count
         </button>
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount - 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous - 1)
+          }
         >
           Decrease Shared Count
         </button>

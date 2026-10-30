@@ -1,13 +1,9 @@
+
 import { useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
 import "./Activities.css";
 import ActivityForm from "./ActivityForm";
 import ActivityItem from "./ActivityItem";
-
-type FeaturePageProps = {
-  sharedCount: number;
-  setSharedCount: Dispatch<SetStateAction<number>>;
-};
+import { useSharedCount } from "../../context/SharedCountContext";
 
 type Activity = {
   id: number;
@@ -16,10 +12,9 @@ type Activity = {
   duration: string;
 };
 
-function Activities({
-  sharedCount,
-  setSharedCount,
-}: FeaturePageProps) {
+function Activities() {
+  const { sharedCount, setSharedCount } = useSharedCount();
+
   const destinations = [
     { id: 1, city: "Paris", country: "France" },
     { id: 2, city: "Nice", country: "France" },
@@ -72,14 +67,18 @@ function Activities({
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount + 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous + 1)
+          }
         >
           Increase Shared Count
         </button>
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount - 1)}
+          onClick={() =>
+            setSharedCount((previous) => previous - 1)
+          }
         >
           Decrease Shared Count
         </button>
@@ -95,8 +94,7 @@ function Activities({
 
       {destinations.map((destination) => {
         const destinationActivities = activities.filter(
-          (activity) =>
-            activity.city === destination.city
+          (activity) => activity.city === destination.city
         );
 
         return (
