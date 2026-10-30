@@ -1,109 +1,98 @@
 
-import { useState } from "react";
+import type { FormEvent } from "react";
 import "./destinations.css";
+
 import DestinationForm from "./DestinationForm";
 
-type DestinationsProps = {
-    sharedCount: number;
-    setSharedCount: React.Dispatch<React.SetStateAction<number>>;
-};
-function Destinations({
-    sharedCount,
-    setSharedCount,
-}: DestinationsProps) {
-    const [destinations, setDestinations] = useState([
-        {
-            id: 1,
-            city: "Paris",
-            country: "France",
-        },
-        {
-            id: 2,
-            city: "Nice",
-            country: "France",
-        },
-        {
-            id: 3,
-            city: "Lyon",
-            country: "France",
-        },
-        {
-            id: 4,
-            city: "Bordeaux",
-            country: "France",
-        }
-    ]);
+import { useDestinations } from "../../hooks/useDestinations";
+import { useDestinationValidation } from "../../hooks/useDestinationValidation";
+import { useSharedCount } from "../../context/SharedCountContext";
 
-    const [city, setCity] = useState("");
-    const [country, setCountry] = useState("");
+/*
+ Sprint 3 Architecture - Destinations Feature
 
-    function addDestination(event: React.FormEvent) {
+ This component displays destinations and handles
+ user interactions.
+
+ useDestinations manages destination state.
+ The Destination Service handles business rules.
+ The Destination Repository manages the data.
+
+ SharedCountContext shares the counter between pages.
+*/
+
+function Destinations() {
+  const { sharedCount, setSharedCount } = useSharedCount();
+
+  const {
+    destinations,
+    city,
+    setCity,
+    country,
+    setCountry,
+    error,
+    handleAddDestination,
+    handleRemoveDestination,
+  } = useDestinations();
+
+  const { checkDestination } = useDestinationValidation();
+
+  function addDestination(event: FormEvent) {
     event.preventDefault();
 
-    if (city.trim() === "" || country.trim() === "") {
-        return;
+    if (!checkDestination(city, country)) {
+      return;
     }
 
-    const newDestination = {
-        id: Date.now(),
-        city: city,
-        country: country,
-    };
+    handleAddDestination();
+  }
 
-    setDestinations([...destinations, newDestination]);
-
-    setCity("");
-    setCountry("");
-    }
-
-    function removeDestination(id: number) {
-    const updatedDestinations = destinations.filter(
-        (destination) => destination.id !== id
-    );
-
-    setDestinations(updatedDestinations);
-    }
-
-    return (
+  return (
     <section className="destinations">
-        <h2>Destinations for My France Trip</h2>
-        <p>Destinations planned for my France trip.</p>
-        <div>
-    <p>Shared Count: {sharedCount}</p>
+      <h2>Destinations for My France Trip</h2>
+      <p>Destinations planned for my France trip.</p>
 
-    <button
-        type="button"
-        onClick={() => setSharedCount(sharedCount + 1)}
-    >
-        Increase Shared Count
-    </button>
-</div>
+      <div>
+        <p>Shared Count: {sharedCount}</p>
 
-        <DestinationForm
-    city={city}
-    country={country}
-    setCity={setCity}
-    setCountry={setCountry}
-    addDestination={addDestination}
-/>
+        <button
+          type="button"
+          onClick={() =>
+            setSharedCount((previous) => previous + 1)
+          }
+        >
+          Increase Shared Count
+        </button>
+      </div>
 
-        <ul>
-            {destinations.map((destination) => (
-                <li key={destination.id}>
-                <h3>{destination.city}</h3>
-                <p>{destination.country}</p>
+      <DestinationForm
+        city={city}
+        country={country}
+        setCity={setCity}
+        setCountry={setCountry}
+        addDestination={addDestination}
+        error={error}
+      />
 
-                <button
-                    type="button"
-                    onClick={() => removeDestination(destination.id)}
-                >
-                    Remove
-                </button>
-                </li>
-            ))}
-        </ul>
+      <ul>
+        {destinations.map((destination) => (
+          <li key={destination.id}>
+            <h3>{destination.city}</h3>
+            <p>{destination.country}</p>
+
+            <button
+              type="button"
+              onClick={() =>
+                handleRemoveDestination(destination.id)
+              }
+            >
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
     </section>
-);
+  );
 }
 
 export default Destinations;

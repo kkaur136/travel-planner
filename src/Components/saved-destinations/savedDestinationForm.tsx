@@ -1,8 +1,6 @@
-import type {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-} from "react";
+
+import type { FormEvent } from "react";
+import { useSavedDestinationContext } from "../../context/SavedDestinationContext";
 
 type Destination = {
   id: number;
@@ -11,44 +9,35 @@ type Destination = {
 
 type SavedDestinationFormProps = {
   destinations: Destination[];
-
-  selectedDestination: string;
-  setSelectedDestination: Dispatch<SetStateAction<string>>;
-
-  lastVisited: string;
-  setLastVisited: Dispatch<SetStateAction<string>>;
-
-  rating: string;
-  setRating: Dispatch<SetStateAction<string>>;
-
-  note: string;
-  setNote: Dispatch<SetStateAction<string>>;
-
-  error: string;
-
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
+/**
+ * Displays the Saved Destination form.
+ * Reads shared presentation state from Context.
+ * Validation and data operations are handled by the parent
+ * component through the service layer.
+ */
 function SavedDestinationForm({
   destinations,
-  selectedDestination,
-  setSelectedDestination,
-  lastVisited,
-  setLastVisited,
-  rating,
-  setRating,
-  note,
-  setNote,
-  error,
   handleSubmit,
 }: SavedDestinationFormProps) {
+  const {
+    selectedDestination,
+    setSelectedDestination,
+    lastVisited,
+    setLastVisited,
+    rating,
+    setRating,
+    note,
+    setNote,
+    error,
+  } = useSavedDestinationContext();
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="destination">
-          Destination:
-        </label>
-
+        <label htmlFor="destination">Destination:</label>
         <select
           id="destination"
           value={selectedDestination}
@@ -56,15 +45,9 @@ function SavedDestinationForm({
             setSelectedDestination(event.target.value)
           }
         >
-          <option value="">
-            Select a destination
-          </option>
-
+          <option value="">Select a destination</option>
           {destinations.map((destination) => (
-            <option
-              key={destination.id}
-              value={destination.name}
-            >
+            <option key={destination.id} value={destination.name}>
               {destination.name}
             </option>
           ))}
@@ -72,10 +55,7 @@ function SavedDestinationForm({
       </div>
 
       <div>
-        <label htmlFor="lastVisited">
-          Last Visited:
-        </label>
-
+        <label htmlFor="lastVisited">Last Visited:</label>
         <input
           id="lastVisited"
           type="date"
@@ -87,10 +67,7 @@ function SavedDestinationForm({
       </div>
 
       <div>
-        <label htmlFor="rating">
-          Rating:
-        </label>
-
+        <label htmlFor="rating">Rating:</label>
         <select
           id="rating"
           value={rating}
@@ -98,9 +75,7 @@ function SavedDestinationForm({
             setRating(event.target.value)
           }
         >
-          <option value="">
-            Select a rating
-          </option>
+          <option value="">Select a rating</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -110,10 +85,7 @@ function SavedDestinationForm({
       </div>
 
       <div>
-        <label htmlFor="note">
-          Personal Note:
-        </label>
-
+        <label htmlFor="note">Personal Note:</label>
         <textarea
           id="note"
           value={note}
@@ -124,11 +96,9 @@ function SavedDestinationForm({
         />
       </div>
 
-      {error && <p>{error}</p>}
+      {error && <p role="alert">{error}</p>}
 
-      <button type="submit">
-        Save to Favourites
-      </button>
+      <button type="submit">Save to Favourites</button>
     </form>
   );
 }
