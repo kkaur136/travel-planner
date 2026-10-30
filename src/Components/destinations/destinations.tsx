@@ -1,5 +1,4 @@
-import { validateDestination } from "../../services/destinationService";
-import { useState } from "react";
+
 import "./destinations.css";
 import DestinationForm from "./DestinationForm";
 import { useDestinations } from "../../hooks/useDestinations";
@@ -12,65 +11,21 @@ function Destinations({
     sharedCount,
     setSharedCount,
 }: DestinationsProps) {
-    
-    const [destinations, setDestinations] = useState([
-        {
-            id: 1,
-            city: "Paris",
-            country: "France",
-        },
-        {
-            id: 2,
-            city: "Nice",
-            country: "France",
-        },
-        {
-            id: 3,
-            city: "Lyon",
-            country: "France",
-        },
-        {
-            id: 4,
-            city: "Bordeaux",
-            country: "France",
-        }
-    ]);
-
-    const [city, setCity] = useState("");
-    const [country, setCountry] = useState("");
-    const [error, setError] = useState("");
+        const {
+        destinations,
+        city,
+        setCity,
+        country,
+        setCountry,
+        error,
+        handleAddDestination,
+        handleRemoveDestination
+    } = useDestinations();
 
     function addDestination(event: React.FormEvent) {
     event.preventDefault();
-
-    const validationError = validateDestination(city, country);
-
-if (validationError) {
-    setError(validationError);
-    return;
+    handleAddDestination();
 }
-
-setError("");
-
-    const newDestination = {
-        id: Date.now(),
-        city: city,
-        country: country,
-    };
-
-    setDestinations([...destinations, newDestination]);
-
-    setCity("");
-    setCountry("");
-    }
-
-    function removeDestination(id: number) {
-    const updatedDestinations = destinations.filter(
-        (destination) => destination.id !== id
-    );
-
-    setDestinations(updatedDestinations);
-    }
 
     return (
     <section className="destinations">
@@ -104,7 +59,7 @@ setError("");
 
                 <button
                     type="button"
-                    onClick={() => removeDestination(destination.id)}
+                    onClick={() => handleRemoveDestination(destination.id)}
                 >
                     Remove
                 </button>
