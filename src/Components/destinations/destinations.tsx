@@ -2,6 +2,7 @@ import { validateDestination } from "../../services/destinationService";
 import { useState } from "react";
 import "./destinations.css";
 import DestinationForm from "./DestinationForm";
+import { useDestinations } from "../../hooks/useDestinations";
 
 type DestinationsProps = {
     sharedCount: number;
@@ -11,6 +12,7 @@ function Destinations({
     sharedCount,
     setSharedCount,
 }: DestinationsProps) {
+    
     const [destinations, setDestinations] = useState([
         {
             id: 1,
