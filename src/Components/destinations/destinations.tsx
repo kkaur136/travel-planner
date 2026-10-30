@@ -13,7 +13,6 @@ function Destinations({
 }: DestinationsProps) {
 
 
-
         const {
         destinations,
         city,
