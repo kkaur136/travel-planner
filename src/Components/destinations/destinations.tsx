@@ -1,4 +1,4 @@
-
+import { validateDestination } from "../../services/destinationService";
 import { useState } from "react";
 import "./destinations.css";
 import DestinationForm from "./DestinationForm";
@@ -41,22 +41,14 @@ function Destinations({
     function addDestination(event: React.FormEvent) {
     event.preventDefault();
 
-    if (city.trim() === "" && country.trim() === "") {
-        setError("Please enter a city and country.");
-        return;
-    }
+    const validationError = validateDestination(city, country);
 
-    if (city.trim() === "") {
-        setError("Please enter a city name.");
-        return;
-    }
+if (validationError) {
+    setError(validationError);
+    return;
+}
 
-    if (country.trim() === "") {
-        setError("Please enter a country name.");
-        return;
-    }
-
-    setError("");
+setError("");
 
     const newDestination = {
         id: Date.now(),
