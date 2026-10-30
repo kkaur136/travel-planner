@@ -5,6 +5,13 @@ type ActivityItemProps = {
   removeActivity: (id: number) => void;
 };
 
+/**
+ * ActivityItem displays one activity.
+ *
+ * The Remove button calls the function passed by Activities.
+ * The parent uses the hook, service and repository
+ * to remove the selected activity.
+ */
 function ActivityItem({
   id,
   name,
@@ -12,12 +19,15 @@ function ActivityItem({
   removeActivity,
 }: ActivityItemProps) {
   return (
-    <li>
-      <h4>{name}</h4>
-      <p>{duration}</p>
+    <li className="activity-item">
+      <div className="activity-item-details">
+        <h4>{name}</h4>
+        <p>Duration: {duration}</p>
+      </div>
 
       <button
         type="button"
+        className="activity-remove"
         onClick={() => removeActivity(id)}
       >
         Remove
