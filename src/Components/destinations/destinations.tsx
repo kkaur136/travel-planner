@@ -1,83 +1,98 @@
-import { useDestinationValidation } from "../../hooks/useDestinationValidation";
+
+import type { FormEvent } from "react";
 import "./destinations.css";
+
 import DestinationForm from "./DestinationForm";
+
 import { useDestinations } from "../../hooks/useDestinations";
+import { useDestinationValidation } from "../../hooks/useDestinationValidation";
+import { useSharedCount } from "../../context/SharedCountContext";
 
-type DestinationsProps = {
-    sharedCount: number;
-    setSharedCount: React.Dispatch<React.SetStateAction<number>>;
-};
-function Destinations({
-    sharedCount,
-    setSharedCount,
-}: DestinationsProps) {
+/*
+ Sprint 3 Architecture - Destinations Feature
 
+ This component displays destinations and handles
+ user interactions.
 
-        const {
-        destinations,
-        city,
-        setCity,
-        country,
-        setCountry,
-        error,
-        handleAddDestination,
-        handleRemoveDestination
-    } = useDestinations();
+ useDestinations manages destination state.
+ The Destination Service handles business rules.
+ The Destination Repository manages the data.
 
-    const { checkDestination } = useDestinationValidation();
+ SharedCountContext shares the counter between pages.
+*/
 
-    function addDestination(event: React.FormEvent) {
+function Destinations() {
+  const { sharedCount, setSharedCount } = useSharedCount();
+
+  const {
+    destinations,
+    city,
+    setCity,
+    country,
+    setCountry,
+    error,
+    handleAddDestination,
+    handleRemoveDestination,
+  } = useDestinations();
+
+  const { checkDestination } = useDestinationValidation();
+
+  function addDestination(event: FormEvent) {
     event.preventDefault();
 
     if (!checkDestination(city, country)) {
-        return;
+      return;
     }
 
     handleAddDestination();
-}
+  }
 
-    return (
+  return (
     <section className="destinations">
-        <h2>Destinations for My France Trip</h2>
-        <p>Destinations planned for my France trip.</p>
-        <div>
-    <p>Shared Count: {sharedCount}</p>
+      <h2>Destinations for My France Trip</h2>
+      <p>Destinations planned for my France trip.</p>
 
-    <button
-        type="button"
-        onClick={() => setSharedCount(sharedCount + 1)}
-    >
-        Increase Shared Count
-    </button>
-</div>
+      <div>
+        <p>Shared Count: {sharedCount}</p>
 
-    <DestinationForm
-    city={city}
-    country={country}
-    setCity={setCity}
-    setCountry={setCountry}
-    addDestination={addDestination}
-    error={error}
-/>
+        <button
+          type="button"
+          onClick={() =>
+            setSharedCount((previous) => previous + 1)
+          }
+        >
+          Increase Shared Count
+        </button>
+      </div>
 
-        <ul>
-            {destinations.map((destination) => (
-                <li key={destination.id}>
-                <h3>{destination.city}</h3>
-                <p>{destination.country}</p>
+      <DestinationForm
+        city={city}
+        country={country}
+        setCity={setCity}
+        setCountry={setCountry}
+        addDestination={addDestination}
+        error={error}
+      />
 
+      <ul>
+        {destinations.map((destination) => (
+          <li key={destination.id}>
+            <h3>{destination.city}</h3>
+            <p>{destination.country}</p>
 
-                <button
-                    type="button"
-                    onClick={() => handleRemoveDestination(destination.id)}
-                >
-                    Remove
-                </button>
-                </li>
-            ))}
-        </ul>
+            <button
+              type="button"
+              onClick={() =>
+                handleRemoveDestination(destination.id)
+              }
+            >
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
     </section>
-);
+  );
 }
 
 export default Destinations;
