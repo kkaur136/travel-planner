@@ -7,7 +7,7 @@ import {
   createActivity,
   updateActivity,
   deleteActivity,
-} from "../apis/activityRepository";
+} from "../repositories/activityRepository";
 
 // Business rule: required fields cannot be empty.
 function isActivityValid(activity: Activity): boolean {

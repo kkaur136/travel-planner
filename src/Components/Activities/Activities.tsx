@@ -1,39 +1,31 @@
+
 import type { Dispatch, SetStateAction } from "react";
 import "./Activities.css";
 
 import ActivityForm from "./ActivityForm";
 import ActivityItem from "./ActivityItem";
+
 import useActivities from "../../hooks/useActivities";
+import { destinationsData } from "../../data/destinationsData";
 
 type ActivitiesProps = {
   sharedCount: number;
   setSharedCount: Dispatch<SetStateAction<number>>;
 };
 
-const destinations = [
-  { id: 1, city: "Paris", country: "France" },
-  { id: 2, city: "Nice", country: "France" },
-  { id: 3, city: "Lyon", country: "France" },
-  { id: 4, city: "Bordeaux", country: "France" },
-  { id: 5, city: "Marseille", country: "France" },
-  { id: 6, city: "Toulouse", country: "France" },
-  { id: 7, city: "Strasbourg", country: "France" },
-  { id: 8, city: "Lille", country: "France" },
-  { id: 9, city: "Nantes", country: "France" },
-  { id: 10, city: "Montpellier", country: "France" },
-];
+/*
+ Sprint 3 Architecture:
+ The Activities component uses the useActivities hook
+ to manage activity state and user actions.
 
-/**
- * Activities is the presentation component.
- *
- * It uses the useActivities hook to display activities
- * and respond when the user adds or removes an activity.
- *
- * The hook calls the Activity service, which handles
- * business rules and uses the Activity repository for data.
- *
- * This separates presentation, business and data-access logic.
- */
+ The hook calls the Activity Service for business logic.
+ The service communicates with the Activity Repository
+ to access and update activity data.
+
+ Destination test data is imported from a separate file
+ instead of being hardcoded in this component.
+*/
+
 function Activities({
   sharedCount,
   setSharedCount,
@@ -44,6 +36,8 @@ function Activities({
     handleRemoveActivity,
   } = useActivities();
 
+  const destinations = destinationsData;
+
   return (
     <section className="activities">
       <h2>Plan Your Activities</h2>
@@ -52,24 +46,26 @@ function Activities({
         Add activities for your trip and view them by destination.
       </p>
 
+      {/* Shared state from App.tsx */}
       <div className="activities-shared">
         <p>Shared Count: {sharedCount}</p>
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount + 1)}
+          onClick={() => setSharedCount((count) => count + 1)}
         >
           Increase Shared Count
         </button>
 
         <button
           type="button"
-          onClick={() => setSharedCount(sharedCount - 1)}
+          onClick={() => setSharedCount((count) => count - 1)}
         >
           Decrease Shared Count
         </button>
       </div>
 
+      {/* Form for adding activities */}
       <ActivityForm
         destinations={destinations}
         onAddActivity={handleAddActivity}
