@@ -11,6 +11,20 @@ function Destinations({
     sharedCount,
     setSharedCount,
 }: DestinationsProps) {
+
+    /*
+    * Sprint 3 Architecture:
+    * This component uses the useDestinations custom hook to manage
+    * destination data, form inputs, and add/remove actions.
+ 
+    * The hook calls the Destination Service, which handles validation
+    * and business logic. The service communicates with the Destination
+    * Repository to access and update destination data.
+    
+    * This separation keeps the component focused on displaying the UI
+    * instead of managing business logic or data storage.
+    */
+
         const {
         destinations,
         city,
@@ -48,8 +62,16 @@ function Destinations({
         Increase Shared Count
     </button>
 </div>
+    /*
+  The DestinationForm receives input values and functions from this
+  component, which gets them from the useDestinations hook.
 
-        <DestinationForm
+  When the user submits the form, the hook uses the Destination
+  Service and Repository to validate and save the new destination.
+
+  This keeps the form focused on user input and displaying errors.
+    */
+    <DestinationForm
     city={city}
     country={country}
     setCity={setCity}
@@ -63,6 +85,13 @@ function Destinations({
                 <li key={destination.id}>
                 <h3>{destination.city}</h3>
                 <p>{destination.country}</p>
+                /*
+                When the user clicks Remove, the custom hook handles the action.
+                The hook calls the Destination Service, which uses the Repository
+                to delete the selected destination.
+
+                This keeps data deletion logic outside the UI component.
+                */
 
                 <button
                     type="button"
