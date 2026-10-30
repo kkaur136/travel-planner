@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import type {
   Dispatch,
@@ -6,6 +7,14 @@ import type {
 } from "react";
 
 import SavedDestinationForm from "./savedDestinationForm";
+
+import type { SavedDestination } from "../../types/SavedDestination";
+
+import {
+  getSavedDestinations,
+  createSavedDestination,
+  deleteSavedDestination,
+} from "../../repositories/savedDestinationRepository";
 
 const destinations = [
   {
@@ -31,20 +40,21 @@ const destinations = [
   },
 ];
 
-type SavedDestination = {
-  id: number;
-  name: string;
-  location: string;
-  lastVisited: string;
-  rating: string;
-  note: string;
-};
-
 type SavedDestinationsProps = {
   sharedCount: number;
   setSharedCount: Dispatch<SetStateAction<number>>;
 };
 
+/**
+ * Saved Destinations component.
+ *
+ * Displays saved destinations and the form for adding favourites.
+ * Uses repository methods for reading, creating, and deleting
+ * saved destination records.
+ *
+ * In the next refactoring stage, presentation state will move
+ * into a custom hook and validation into a service.
+ */
 function SavedDestinations({
   sharedCount,
   setSharedCount,
@@ -56,9 +66,13 @@ function SavedDestinations({
 
   const [savedDestinations, setSavedDestinations] = useState<
     SavedDestination[]
-  >([]);
+  >(() => getSavedDestinations());
 
   const [error, setError] = useState("");
+
+  const refreshSavedDestinations = () => {
+    setSavedDestinations(getSavedDestinations());
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -73,7 +87,7 @@ function SavedDestinations({
       return;
     }
 
-    const alreadySaved = savedDestinations.some(
+    const alreadySaved = getSavedDestinations().some(
       (destination) => destination.name === selectedDestination
     );
 
@@ -100,10 +114,8 @@ function SavedDestinations({
       note,
     };
 
-    setSavedDestinations([
-      ...savedDestinations,
-      newSavedDestination,
-    ]);
+    createSavedDestination(newSavedDestination);
+    refreshSavedDestinations();
 
     setSelectedDestination("");
     setLastVisited("");
@@ -113,11 +125,8 @@ function SavedDestinations({
   };
 
   const handleRemove = (id: number) => {
-    setSavedDestinations(
-      savedDestinations.filter(
-        (destination) => destination.id !== id
-      )
-    );
+    deleteSavedDestination(id);
+    refreshSavedDestinations();
   };
 
   return (
@@ -175,18 +184,14 @@ function SavedDestinations({
             >
               <h3>{destination.name}</h3>
 
-              <p>
-                Location: {destination.location}
-              </p>
+              <p>Location: {destination.location}</p>
 
               <p>
                 Last Visited:{" "}
                 {destination.lastVisited || "Not provided"}
               </p>
 
-              <p>
-                Rating: {destination.rating}/5
-              </p>
+              <p>Rating: {destination.rating}/5</p>
 
               <p>
                 Personal Note:{" "}
@@ -195,9 +200,7 @@ function SavedDestinations({
 
               <button
                 type="button"
-                onClick={() =>
-                  handleRemove(destination.id)
-                }
+                onClick={() => handleRemove(destination.id)}
               >
                 Remove
               </button>
