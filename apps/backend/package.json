@@ -5,7 +5,7 @@
     "scripts": {
         "start": "ts-node src/server.ts",
         "build": "tsc -p tsconfig.json",
-        "postinstall": "prisma skills sync || exit 0"
+    
     },
     "dependencies": {
         "@prisma/client": "^6.19.3",
