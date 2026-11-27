@@ -1,8 +1,8 @@
 import "./SavedDestinations.css";
+import { useState } from "react";
 import type { FormEvent } from "react";
 
 import SavedDestinationForm from "./savedDestinationForm";
-import type { SavedDestination } from "../../types/SavedDestination";
 
 import { useSavedDestinations } from "../../hooks/useSavedDestinations";
 import { useSavedDestinationList } from "../../hooks/useSavedDestinationList";
@@ -29,17 +29,6 @@ const destinations = [
   },
 ];
 
-/**
- * Saved Destinations component.
- *
- * Presentation: Displays the form and saved destinations.
- * Hook: Manages form state and error messages.
- * List Hook: Retrieves saved destinations through the service.
- * Context: Shares form state with the form component.
- * Service: Handles validation and business rules.
- * Repository: Handles CRUD operations and data storage.
- * SharedCountContext: Shares counter state across feature pages.
- */
 function SavedDestinations() {
   const { sharedCount, setSharedCount } = useSharedCount();
 
@@ -50,6 +39,7 @@ function SavedDestinations() {
     lastVisited,
     rating,
     note,
+    error,
     setError,
     resetForm,
   } = formState;
@@ -57,10 +47,21 @@ function SavedDestinations() {
   const {
     savedDestinations,
     refreshSavedDestinations,
+    loading,
+    listError,
   } = useSavedDestinationList();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [saving, setSaving] = useState(false);
+  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [actionError, setActionError] = useState("");
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (saving) return;
+
+    setError("");
+    setActionError("");
 
     const destinationDetails = destinations.find(
       (destination) => destination.name === selectedDestination
@@ -71,8 +72,7 @@ function SavedDestinations() {
       return;
     }
 
-    const newSavedDestination: SavedDestination = {
-      id: Date.now(),
+    const newSavedDestination = {
       name: destinationDetails.name,
       location: destinationDetails.location,
       lastVisited,
@@ -81,8 +81,11 @@ function SavedDestinations() {
     };
 
     try {
-      savedDestinationService.add(newSavedDestination);
-      refreshSavedDestinations();
+      setSaving(true);
+
+      await savedDestinationService.add(newSavedDestination);
+      await refreshSavedDestinations();
+
       resetForm();
     } catch (error) {
       setError(
@@ -90,12 +93,29 @@ function SavedDestinations() {
           ? error.message
           : "Unable to save destination."
       );
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleRemove = (id: number) => {
-    savedDestinationService.remove(id);
-    refreshSavedDestinations();
+  const handleRemove = async (id: number) => {
+    if (removingId !== null) return;
+
+    try {
+      setRemovingId(id);
+      setActionError("");
+
+      await savedDestinationService.remove(id);
+      await refreshSavedDestinations();
+    } catch (error) {
+      setActionError(
+        error instanceof Error
+          ? error.message
+          : "Unable to remove destination."
+      );
+    } finally {
+      setRemovingId(null);
+    }
   };
 
   return (
@@ -137,9 +157,19 @@ function SavedDestinations() {
         />
       </SavedDestinationContext.Provider>
 
+      {saving && <p>Saving destination...</p>}
+
+      {error && <p role="alert">{error}</p>}
+
       <h3>My Favourites</h3>
 
-      {savedDestinations.length === 0 ? (
+      {actionError && <p role="alert">{actionError}</p>}
+
+      {loading ? (
+        <p>Loading saved destinations...</p>
+      ) : listError ? (
+        <p role="alert">{listError}</p>
+      ) : savedDestinations.length === 0 ? (
         <p>No favourite destinations saved yet.</p>
       ) : (
         <ul className="saved-destinations__list">
@@ -166,9 +196,12 @@ function SavedDestinations() {
 
               <button
                 type="button"
-                onClick={() => handleRemove(destination.id)}
+                disabled={removingId !== null}
+                onClick={() => void handleRemove(destination.id)}
               >
-                Remove
+                {removingId === destination.id
+                  ? "Removing..."
+                  : "Remove"}
               </button>
             </li>
           ))}
