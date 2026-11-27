@@ -26,48 +26,46 @@ export function validateDestination(
     return "";
 }
 
-export function getDestinations(): Destination[] {
+export async function getDestinations(): Promise<Destination[]> {
     return getAllDestinations();
 }
 
-export function addNewDestination(
+export async function addNewDestination(
     city: string,
     country: string
-): Destination {
+): Promise<Destination> {
     const validationError = validateDestination(city, country);
 
     if (validationError) {
         throw new Error(validationError);
     }
 
-    const newDestination: Destination = {
-        id: Date.now(),
+    return createDestination({
         city: city.trim(),
         country: country.trim()
-    };
-
-    return createDestination(newDestination);
+    });
 }
 
-export function editDestination(
+export async function editDestination(
     id: number,
     city: string,
     country: string
-): Destination | undefined {
+): Promise<Destination | undefined> {
     const validationError = validateDestination(city, country);
 
     if (validationError) {
         throw new Error(validationError);
     }
 
-    const updatedDestination: Destination = {
-        id: id,
+    return updateDestination({
+        id,
         city: city.trim(),
         country: country.trim()
-    };
-
-    return updateDestination(updatedDestination);
+    });
 }
-export function removeDestination(id: number): boolean {
+
+export async function removeDestination(
+    id: number
+): Promise<boolean> {
     return deleteDestination(id);
 }

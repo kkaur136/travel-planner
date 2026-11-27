@@ -1,6 +1,7 @@
 
 import express from "express";
 import cors from "cors";
+import destinationRoutes from "./routes/destinationRoutes";
 
 const app = express();
 
@@ -20,5 +21,8 @@ app.use(express.json());
 app.get("/", (_req, res) => {
   res.send("Travel Planner Backend is running!");
 });
+
+// Destination API routes
+app.use("/api/destinations", destinationRoutes);
 
 export default app;
