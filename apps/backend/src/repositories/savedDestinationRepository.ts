@@ -1,7 +1,5 @@
 
-import { PrismaClient } from "../generated/prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 // Get all saved destinations
 export const getAllSavedDestinations = async () => {
