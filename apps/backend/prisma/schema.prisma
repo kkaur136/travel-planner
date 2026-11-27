@@ -14,7 +14,16 @@ datasource db {
 }
 
 model Destination {
-  id      Int    @id @default(autoincrement())
-  city    String
-  country String
+  id         Int        @id @default(autoincrement())
+  city       String
+  country    String
+  activities Activity[]
+}
+
+model Activity {
+  id            Int         @id @default(autoincrement())
+  name          String
+  duration      String
+  destinationId Int
+  destination   Destination @relation(fields: [destinationId], references: [id])
 }

@@ -1,58 +1,25 @@
+import * as activityRepository from "../repositories/activityRepository";
+import type { ActivityInput } from "../types/Activity";
 
-import type { Activity } from "../types/Activity";
-
-import {
-  getActivities,
-  getActivityById,
-  createActivity,
-  updateActivity,
-  deleteActivity,
-} from "../repositories/activityRepository";
-
-// Business rule: required fields cannot be empty.
-function isActivityValid(activity: Activity): boolean {
-  return (
-    activity.name.trim() !== "" &&
-    activity.city.trim() !== "" &&
-    activity.duration.trim() !== ""
-  );
+export function getActivities() {
+    return activityRepository.getActivities();
 }
 
-function fetchActivities(): Activity[] {
-  return getActivities();
+export function getDestinations() {
+    return activityRepository.getDestinations();
 }
 
-function fetchActivityById(id: number): Activity | undefined {
-  return getActivityById(id);
+export function addActivity(activity: ActivityInput) {
+    return activityRepository.addActivity(activity);
 }
 
-function addActivity(activity: Activity): boolean {
-  if (!isActivityValid(activity)) {
-    return false;
-  }
-
-  createActivity(activity);
-  return true;
+export function updateActivity(
+    id: number,
+    activity: ActivityInput
+) {
+    return activityRepository.updateActivity(id, activity);
 }
 
-function editActivity(activity: Activity): boolean {
-  if (!isActivityValid(activity)) {
-    return false;
-  }
-
-  updateActivity(activity);
-  return true;
+export function removeActivity(id: number) {
+    return activityRepository.removeActivity(id);
 }
-
-function removeActivity(id: number): void {
-  deleteActivity(id);
-}
-
-export {
-  isActivityValid,
-  fetchActivities,
-  fetchActivityById,
-  addActivity,
-  editActivity,
-  removeActivity,
-};

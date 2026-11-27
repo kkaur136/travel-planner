@@ -1,44 +1,77 @@
+import type {
+    Activity,
+    ActivityInput,
+    ActivityDestination
+} from "../types/Activity";
 
-import type { Activity } from "../types/Activity";
-import activityData from "../data/activities";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-let activities: Activity[] = [...activityData];
+const ACTIVITY_URL = `${API_BASE_URL}/api/v1/activities`;
+const DESTINATION_URL = `${API_BASE_URL}/api/v1/destinations`;
 
-// READ all activities
-function getActivities(): Activity[] {
-  return [...activities];
+export async function getActivities(): Promise<Activity[]> {
+    const response = await fetch(ACTIVITY_URL);
+
+    if (!response.ok) {
+        throw new Error("Failed to retrieve activities.");
+    }
+
+    return response.json();
 }
 
-// READ one activity
-function getActivityById(id: number): Activity | undefined {
-  return activities.find((activity) => activity.id === id);
+export async function getDestinations(): Promise<ActivityDestination[]> {
+    const response = await fetch(DESTINATION_URL);
+
+    if (!response.ok) {
+        throw new Error("Failed to retrieve destinations.");
+    }
+
+    return response.json();
 }
 
-// CREATE an activity
-function createActivity(activity: Activity): void {
-  activities = [...activities, activity];
+export async function addActivity(
+    activity: ActivityInput
+): Promise<Activity> {
+    const response = await fetch(ACTIVITY_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(activity)
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to add activity.");
+    }
+
+    return response.json();
 }
 
-// UPDATE an activity
-function updateActivity(updatedActivity: Activity): void {
-  activities = activities.map((activity) =>
-    activity.id === updatedActivity.id
-      ? updatedActivity
-      : activity
-  );
+export async function updateActivity(
+    id: number,
+    activity: ActivityInput
+): Promise<Activity> {
+    const response = await fetch(`${ACTIVITY_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(activity)
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to update activity.");
+    }
+
+    return response.json();
 }
 
-// DELETE an activity
-function deleteActivity(id: number): void {
-  activities = activities.filter(
-    (activity) => activity.id !== id
-  );
-}
+export async function removeActivity(id: number): Promise<void> {
+    const response = await fetch(`${ACTIVITY_URL}/${id}`, {
+        method: "DELETE"
+    });
 
-export {
-  getActivities,
-  getActivityById,
-  createActivity,
-  updateActivity,
-  deleteActivity,
-};
+    if (!response.ok) {
+        throw new Error("Failed to remove activity.");
+    }
+}
