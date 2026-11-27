@@ -8,6 +8,8 @@ import type {
 
 import * as activityService from "../services/activityService";
 
+import { getAllDestinations } from "../repositories/destinationRepository";
+
 export function useActivities() {
     const [activities, setActivities] = useState<Activity[]>([]);
 
@@ -20,17 +22,30 @@ export function useActivities() {
 
     useEffect(() => {
         async function loadData() {
+            setError("");
+
+            try {
+                const destinationData =
+                    await getAllDestinations();
+
+                setDestinations(destinationData);
+            } catch (error) {
+                console.error("Destination loading error:", error);
+                setError("Failed to load destinations.");
+            }
+
             try {
                 const activityData =
                     await activityService.getActivities();
 
-                const destinationData =
-                    await activityService.getDestinations();
-
                 setActivities(activityData);
-                setDestinations(destinationData);
             } catch (error) {
-                setError("Failed to load activities or destinations.");
+                console.error("Activity loading error:", error);
+                setError((previousError) =>
+                    previousError
+                        ? `${previousError} Failed to load activities.`
+                        : "Failed to load activities."
+                );
             } finally {
                 setLoading(false);
             }

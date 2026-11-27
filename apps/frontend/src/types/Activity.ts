@@ -1,3 +1,4 @@
+import type { Destination } from "./Destination";
 export interface Activity {
     id: number;
     name: string;
@@ -11,7 +12,4 @@ export interface ActivityInput {
     destinationId: number;
 }
 
-export interface ActivityDestination {
-    id: number;
-    name: string;
-}
+export type ActivityDestination = Destination;

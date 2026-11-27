@@ -107,7 +107,7 @@ export default function ActivityItem({
                                     key={destination.id}
                                     value={destination.id}
                                 >
-                                    {destination.name}
+                                    {destination.city}, {destination.country}
                                 </option>
                             ))}
                         </select>
