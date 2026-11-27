@@ -1,6 +1,17 @@
-export type Activity = {
+export interface Activity {
     id: number;
-    name: string; 
-    city: string;
+    name: string;
     duration: string;
-};
+    destinationId: number;
+}
+
+export interface ActivityInput {
+    name: string;
+    duration: string;
+    destinationId: number;
+}
+
+export interface ActivityDestination {
+    id: number;
+    name: string;
+}

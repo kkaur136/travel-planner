@@ -1,55 +1,110 @@
-
 import { useEffect, useState } from "react";
-import type { Activity } from "../types/Activity";
 
-import {
-  fetchActivities,
-  addActivity,
-  removeActivity,
-} from "../services/activityService";
+import type {
+    Activity,
+    ActivityInput,
+    ActivityDestination
+} from "../types/Activity";
 
-/**
- * useActivities
- *
- * Returns:
- * activities - Activities currently displayed on the page.
- * handleAddActivity - Adds an activity and refreshes the list.
- * handleRemoveActivity - Removes an activity and refreshes the list.
- *
- * The hook manages presentation state.
- * Business rules are handled by the Activity service.
- */
-function useActivities() {
-  const [activities, setActivities] = useState<Activity[]>([]);
+import * as activityService from "../services/activityService";
 
-  function loadActivities() {
-    setActivities(fetchActivities());
-  }
+export function useActivities() {
+    const [activities, setActivities] = useState<Activity[]>([]);
 
-  function handleAddActivity(activity: Activity): boolean {
-    const added = addActivity(activity);
+    const [destinations, setDestinations] =
+        useState<ActivityDestination[]>([]);
 
-    if (added) {
-      loadActivities();
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function loadData() {
+            try {
+                const activityData =
+                    await activityService.getActivities();
+
+                const destinationData =
+                    await activityService.getDestinations();
+
+                setActivities(activityData);
+                setDestinations(destinationData);
+            } catch (error) {
+                setError("Failed to load activities or destinations.");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadData();
+    }, []);
+
+    async function loadActivities() {
+        const data = await activityService.getActivities();
+        setActivities(data);
     }
 
-    return added;
-  }
+    async function handleAddActivity(
+        activity: ActivityInput
+    ): Promise<boolean> {
+        setSaving(true);
+        setError("");
 
-  function handleRemoveActivity(id: number) {
-    removeActivity(id);
-    loadActivities();
-  }
+        try {
+            await activityService.addActivity(activity);
+            await loadActivities();
 
-  useEffect(() => {
-    loadActivities();
-  }, []);
+            return true;
+        } catch (error) {
+            setError("Failed to add activity.");
+            return false;
+        } finally {
+            setSaving(false);
+        }
+    }
 
-  return {
-    activities,
-    handleAddActivity,
-    handleRemoveActivity,
-  };
+    async function handleUpdateActivity(
+        id: number,
+        activity: ActivityInput
+    ): Promise<boolean> {
+        setSaving(true);
+        setError("");
+
+        try {
+            await activityService.updateActivity(id, activity);
+            await loadActivities();
+
+            return true;
+        } catch (error) {
+            setError("Failed to update activity.");
+            return false;
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function handleRemoveActivity(id: number) {
+        setSaving(true);
+        setError("");
+
+        try {
+            await activityService.removeActivity(id);
+            await loadActivities();
+        } catch (error) {
+            setError("Failed to remove activity.");
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    return {
+        activities,
+        destinations,
+        loading,
+        saving,
+        error,
+        handleAddActivity,
+        handleUpdateActivity,
+        handleRemoveActivity
+    };
 }
-
-export default useActivities;

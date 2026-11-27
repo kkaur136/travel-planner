@@ -1,116 +1,72 @@
-
-import "./Activities.css";
-
+import { useActivities } from "../../hooks/useActivities";
 import ActivityForm from "./ActivityForm";
 import ActivityItem from "./ActivityItem";
+import "./Activities.css";
 
-import useActivities from "../../hooks/useActivities";
-import { useSharedCount } from "../../context/SharedCountContext";
-import { destinationsData } from "../../data/destinationsData";
+export default function Activities() {
+    const {
+        activities,
+        destinations,
+        loading,
+        saving,
+        error,
+        handleAddActivity,
+        handleUpdateActivity,
+        handleRemoveActivity
+    } = useActivities();
 
-/*
- Sprint 3 Architecture - Activities Feature
+    if (loading) {
+        return <p>Loading activities...</p>;
+    }
 
- This component is responsible for displaying the Activities page.
- The useActivities hook manages activity state and actions.
- The Activity Service handles validation and business rules.
- The Activity Repository manages activity data.
- Destination test data is imported from a separate file
- instead of being hardcoded in this component.
- SharedCountContext allows the counter to be shared
- between different pages without passing props.
-*/
+    return (
+        <section className="activities">
+            <h1>Activities</h1>
 
-function Activities() {
-  // Get activity data and actions from the custom hook.
-  const {
-    activities,
-    handleAddActivity,
-    handleRemoveActivity,
-  } = useActivities();
+            {error && <p role="alert">{error}</p>}
 
-  // Get the shared count from Context.
-  const { sharedCount, setSharedCount } = useSharedCount();
+            <ActivityForm
+                destinations={destinations}
+                saving={saving}
+                onAddActivity={handleAddActivity}
+            />
 
-  // Get destinations from the separate data file.
-  const destinations = destinationsData;
+            <h2>Activities by Destination</h2>
 
-  return (
-    <section className="activities">
-      <h2>Plan Your Activities</h2>
+            {destinations.length === 0 && (
+                <p>Please add a destination first.</p>
+            )}
 
-      <p className="activities-intro">
-        Add activities for your trip and view them by destination.
-      </p>
+            {destinations.map((destination) => {
+                const destinationActivities = activities.filter(
+                    (activity) =>
+                        activity.destinationId === destination.id
+                );
 
-      {/* Shared count across pages */}
-      <div className="activities-shared">
-        <p>Shared Count: {sharedCount}</p>
+                return (
+                    <div
+                        key={destination.id}
+                        className="destination-group"
+                    >
+                        <h2>{destination.name}</h2>
 
-        <button
-          type="button"
-          onClick={() =>
-            setSharedCount((previous) => previous + 1)
-          }
-        >
-          Increase Shared Count
-        </button>
+                        {destinationActivities.length === 0 && (
+                            <p>No activities added yet.</p>
+                        )}
 
-        <button
-          type="button"
-          onClick={() =>
-            setSharedCount((previous) => previous - 1)
-          }
-        >
-          Decrease Shared Count
-        </button>
-      </div>
-
-      {/* Form for adding a new activity */}
-      <ActivityForm
-        destinations={destinations}
-        onAddActivity={handleAddActivity}
-      />
-
-      <h2>Activities by Destination</h2>
-
-      <div className="activities-destinations">
-        {destinations.map((destination) => {
-          // Find activities belonging to this destination.
-          const destinationActivities = activities.filter(
-            (activity) => activity.city === destination.city
-          );
-
-          return (
-            <section
-              key={destination.id}
-              className="activities-destination"
-            >
-              <h3>
-                {destination.city}, {destination.country}
-              </h3>
-
-              {destinationActivities.length === 0 ? (
-                <p>No activities added yet.</p>
-              ) : (
-                <ul className="activities-list">
-                  {destinationActivities.map((activity) => (
-                    <ActivityItem
-                      key={activity.id}
-                      id={activity.id}
-                      name={activity.name}
-                      duration={activity.duration}
-                      removeActivity={handleRemoveActivity}
-                    />
-                  ))}
-                </ul>
-              )}
-            </section>
-          );
-        })}
-      </div>
-    </section>
-  );
+                        {destinationActivities.map((activity) => (
+                            <ActivityItem
+                                key={activity.id}
+                                activity={activity}
+                                destinations={destinations}
+                                saving={saving}
+                                onRemove={handleRemoveActivity}
+                                onUpdate={handleUpdateActivity}
+                            />
+                        ))}
+                    </div>
+                );
+            })}
+        </section>
+    );
 }
-
-export default Activities;
