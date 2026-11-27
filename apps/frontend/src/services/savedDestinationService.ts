@@ -7,12 +7,16 @@ import {
   deleteSavedDestination,
 } from "../repositories/savedDestinationRepository";
 
+type NewSavedDestination = Omit<SavedDestination, "id">;
+
 export const savedDestinationService = {
-  getAll: (): SavedDestination[] => {
-    return getSavedDestinations();
+  getAll: async (): Promise<SavedDestination[]> => {
+    return await getSavedDestinations();
   },
 
-  add: (destination: SavedDestination): void => {
+  add: async (
+    destination: NewSavedDestination
+  ): Promise<SavedDestination> => {
     if (!destination.name.trim()) {
       throw new Error("Please select a destination.");
     }
@@ -21,7 +25,9 @@ export const savedDestinationService = {
       throw new Error("Please select a valid rating.");
     }
 
-    const alreadySaved = getSavedDestinations().some(
+    const savedDestinations = await getSavedDestinations();
+
+    const alreadySaved = savedDestinations.some(
       (saved) =>
         saved.name.toLowerCase() === destination.name.toLowerCase()
     );
@@ -30,10 +36,10 @@ export const savedDestinationService = {
       throw new Error("This destination is already in your favourites.");
     }
 
-    createSavedDestination(destination);
+    return await createSavedDestination(destination);
   },
 
-  remove: (id: number): boolean => {
-    return deleteSavedDestination(id);
+  remove: async (id: number): Promise<boolean> => {
+    return await deleteSavedDestination(id);
   },
 };
