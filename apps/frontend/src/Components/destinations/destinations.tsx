@@ -1,0 +1,102 @@
+
+import type { FormEvent } from "react";
+import "./destinations.css";
+import DestinationForm from "./DestinationForm";
+import { useDestinations } from "../../hooks/useDestinations";
+import { useDestinationValidation } from "../../hooks/useDestinationValidation";
+import { useSharedCount } from "../../context/SharedCountContext";
+
+function Destinations() {
+    const { sharedCount, setSharedCount } = useSharedCount();
+
+    const {
+        destinations,
+        city,
+        setCity,
+        country,
+        setCountry,
+        error,
+        loading,
+        editingId,
+        handleStartEdit,
+        handleCancelEdit,
+        handleAddDestination,
+        handleRemoveDestination
+    } = useDestinations();
+
+    const { checkDestination } = useDestinationValidation();
+
+    function addDestination(event: FormEvent) {
+        event.preventDefault();
+
+        if (!checkDestination(city, country)) {
+            return;
+        }
+
+        handleAddDestination();
+    }
+
+    return (
+        <section className="destinations">
+            <h2>Destinations for My France Trip</h2>
+            <p>Destinations planned for my France trip.</p>
+
+            <div>
+                <p>Shared Count: {sharedCount}</p>
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        setSharedCount(previous => previous + 1)
+                    }
+                >
+                    Increase Shared Count
+                </button>
+            </div>
+
+            <DestinationForm
+                city={city}
+                country={country}
+                setCity={setCity}
+                setCountry={setCountry}
+                addDestination={addDestination}
+                error={error}
+                isEditing={editingId !== null}
+                cancelEdit={handleCancelEdit}
+            />
+
+            {loading && <p>Loading destinations...</p>}
+
+            {!loading && destinations.length === 0 && !error && (
+                <p>No destinations found. Add a destination to get started.</p>
+            )}
+
+            <ul>
+                {destinations.map(destination => (
+                    <li key={destination.id}>
+                        <h3>{destination.city}</h3>
+                        <p>{destination.country}</p>
+
+                        <button
+                            type="button"
+                            onClick={() => handleStartEdit(destination)}
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                handleRemoveDestination(destination.id)
+                            }
+                        >
+                            Remove
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    );
+}
+
+export default Destinations;
