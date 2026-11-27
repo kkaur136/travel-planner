@@ -71,12 +71,19 @@ export function useActivities() {
 
             return true;
         } catch (error) {
-            setError("Failed to add activity.");
+            console.error("Add activity error:", error);
+
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to add activity."
+            );
+
             return false;
         } finally {
             setSaving(false);
         }
-    }
+        }
 
     async function handleUpdateActivity(
         id: number,

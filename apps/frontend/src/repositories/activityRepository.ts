@@ -6,8 +6,10 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const ACTIVITY_URL = `${API_BASE_URL}/api/v1/activities`;
-const DESTINATION_URL = `${API_BASE_URL}/api/v1/destinations`;
+const ACTIVITY_URL = `${
+    import.meta.env.VITE_API_URL || "http://localhost:3002"
+}/api/activities`;
+const DESTINATION_URL = `${API_BASE_URL}/api/destinations`;
 
 export async function getActivities(): Promise<Activity[]> {
     const response = await fetch(ACTIVITY_URL);
@@ -41,7 +43,14 @@ export async function addActivity(
     });
 
     if (!response.ok) {
-        throw new Error("Failed to add activity.");
+        const errorMessage = await response.text();
+
+        console.error("Status:", response.status);
+        console.error("Backend response:", errorMessage);
+
+        throw new Error(
+            errorMessage || "Failed to add activity."
+        );
     }
 
     return response.json();
