@@ -48,7 +48,7 @@ export default function Activities() {
                         key={destination.id}
                         className="destination-group"
                     >
-                        <h2>{destination.name}</h2>
+                        <h2>{destination.city}, {destination.country}</h2>
 
                         {destinationActivities.length === 0 && (
                             <p>No activities added yet.</p>
