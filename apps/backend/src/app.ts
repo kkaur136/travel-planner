@@ -1,11 +1,12 @@
 
 import express from "express";
 import cors from "cors";
+import savedDestinationRoutes from "./routes/savedDestinationRoutes";
 import destinationRoutes from "./routes/destinationRoutes";
 
 const app = express();
 
-// Enable CORS for the React front-end
+// Enable CORS for the React front end
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -21,6 +22,9 @@ app.use(express.json());
 app.get("/", (_req, res) => {
   res.send("Travel Planner Backend is running!");
 });
+
+// Saved Destinations API routes
+app.use("/api/saved-destinations", savedDestinationRoutes);
 
 // Destination API routes
 app.use("/api/destinations", destinationRoutes);
