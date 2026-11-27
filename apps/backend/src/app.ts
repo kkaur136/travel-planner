@@ -1,7 +1,7 @@
-
 import express from "express";
 import cors from "cors";
 import destinationRoutes from "./routes/destinationRoutes";
+import activityRoutes from "./routes/activityRoutes";
 
 const app = express();
 
@@ -24,5 +24,6 @@ app.get("/", (_req, res) => {
 
 // Destination API routes
 app.use("/api/destinations", destinationRoutes);
+app.use("/api/activities", activityRoutes);
 
 export default app;
