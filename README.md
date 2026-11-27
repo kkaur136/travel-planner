@@ -65,3 +65,51 @@ Robinpreet Kaur - Saved Destinations: Created the Saved Destinations component a
 - Worked on the Saved Destinations feature page.
 - Displayed saved destinations and their information.
 - Worked on the Sprint 2 requirements for the Saved Destinations feature.
+
+
+## Sprint 4 - PostgreSQL Development Database
+
+This project uses PortgreSQL for the development database.
+
+### Requirements
+
+- Docker Desktop
+- Docker Compose 
+- Node.js and npm 
+
+### Start the Database 
+
+From the project root, run:
+
+```bash
+docker compose up -d
+```
+
+### Check Database Status 
+
+```bash
+docker compose ps
+```
+
+The PostgreSQL container should be healthy.
+
+### Database Connection
+
+The development database runs on:
+
+- Host: localhost
+- Port: 5433
+- Database: travel_planner
+- Username: postgres
+
+Copy `apps/backend/.env.example` to `apps/backend/.env` to configure your local database connection.
+
+### Stop the Database
+
+```bash
+docker compose down
+```
+
+The database data is stored in a Docker volume.
+
+Do not use `docker compose down -v` unless you intentionally want to delete the local database data.

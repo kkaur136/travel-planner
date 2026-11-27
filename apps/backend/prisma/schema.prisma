@@ -5,9 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -24,4 +22,10 @@ model SavedDestination {
   note        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Destination {
+  id      Int    @id @default(autoincrement())
+  city    String
+  country String
 }
