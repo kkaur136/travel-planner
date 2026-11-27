@@ -7,6 +7,8 @@ type DestinationFormProps = {
     setCountry: (country: string) => void;
     addDestination: (event: React.FormEvent) => void;
     error: string;
+    isEditing?: boolean;
+    cancelEdit?: () => void;
 };
 
 function DestinationForm({
@@ -15,16 +17,23 @@ function DestinationForm({
     setCity,
     setCountry,
     addDestination,
-    error
+    error,
+    isEditing = false,
+    cancelEdit
 }: DestinationFormProps) {
-        const { checkDestination, validationError } = useDestinationValidation();
+    const { checkDestination, validationError } =
+        useDestinationValidation();
 
     function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
+        event.preventDefault();
 
-    checkDestination(city, country);
-    addDestination(event);
-}
+        if (!checkDestination(city, country)) {
+            return;
+        }
+
+        addDestination(event);
+    }
+
     return (
         <form onSubmit={handleSubmit}>
             <div>
@@ -33,7 +42,9 @@ function DestinationForm({
                     type="text"
                     id="city"
                     value={city}
-                    onChange={(event) => setCity(event.target.value)}
+                    onChange={(event) =>
+                        setCity(event.target.value)
+                    }
                 />
             </div>
 
@@ -43,15 +54,27 @@ function DestinationForm({
                     type="text"
                     id="country"
                     value={country}
-                    onChange={(event) => setCountry(event.target.value)}
+                    onChange={(event) =>
+                        setCountry(event.target.value)
+                    }
                 />
             </div>
+
             {(error || validationError) && (
-    <p role="alert" className="validation-error">
-        {error || validationError}
-    </p>
-)}
-            <button type="submit">Add Destination</button>
+                <p role="alert" className="validation-error">
+                    {error || validationError}
+                </p>
+            )}
+
+            <button type="submit">
+                {isEditing ? "Update Destination" : "Add Destination"}
+            </button>
+
+            {isEditing && (
+                <button type="button" onClick={cancelEdit}>
+                    Cancel
+                </button>
+            )}
         </form>
     );
 }

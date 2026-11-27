@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import savedDestinationRoutes from "./routes/savedDestinationRoutes";
+import destinationRoutes from "./routes/destinationRoutes";
 
 const app = express();
 
@@ -24,5 +25,8 @@ app.get("/", (_req, res) => {
 
 // Saved Destinations API routes
 app.use("/api/saved-destinations", savedDestinationRoutes);
+
+// Destination API routes
+app.use("/api/destinations", destinationRoutes);
 
 export default app;
